@@ -1,18 +1,18 @@
-package com.ppinol.coworkingapp.core.ui;
+package com.ppinol.coworkingapp.core.ui.hotdesk;
 
-import com.ppinol.coworkingapp.core.application.hotdesk.DuplicatedHotDeskNumberException;
+import com.ppinol.coworkingapp.core.application.hotdesk.DuplicatedHotDeskException;
 import com.ppinol.coworkingapp.core.domain.hotdesk.InvalidHotDeskNumberException;
-import com.ppinol.coworkingapp.core.ui.hotdesk.InvalidInputNumberException;
+import com.ppinol.coworkingapp.core.ui.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice
-public class GlobalExceptionHandler {
+@RestControllerAdvice(assignableTypes = RegisterHotDeskController.class)
+public class HotDeskExceptionHandler {
 
-    @ExceptionHandler(DuplicatedHotDeskNumberException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicatedNumber(DuplicatedHotDeskNumberException ex) {
+    @ExceptionHandler(DuplicatedHotDeskException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicatedNumber(DuplicatedHotDeskException ex) {
         return ErrorResponse.builder()
                 .status(HttpStatus.CONFLICT)
                 .message(ex.getMessage())
@@ -27,8 +27,8 @@ public class GlobalExceptionHandler {
                 .build();
     }
 
-    @ExceptionHandler(InvalidInputNumberException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidInputNumber(InvalidInputNumberException ex) {
+    @ExceptionHandler(InvalidRegisterHotDeskInputException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidInputNumber(InvalidRegisterHotDeskInputException ex) {
         return ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .message(ex.getMessage())

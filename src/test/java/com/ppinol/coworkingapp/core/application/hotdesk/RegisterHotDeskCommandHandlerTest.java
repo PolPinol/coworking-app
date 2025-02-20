@@ -1,8 +1,5 @@
-package com.ppinol.coworkingapp.core.application;
+package com.ppinol.coworkingapp.core.application.hotdesk;
 
-import com.ppinol.coworkingapp.core.application.hotdesk.DuplicatedHotDeskNumberException;
-import com.ppinol.coworkingapp.core.application.hotdesk.RegisterHotDeskCommand;
-import com.ppinol.coworkingapp.core.application.hotdesk.RegisterHotDeskCommandHandler;
 import com.ppinol.coworkingapp.core.domain.hotdesk.HotDesk;
 import com.ppinol.coworkingapp.core.domain.hotdesk.HotDeskNumber;
 import com.ppinol.coworkingapp.core.domain.hotdesk.HotDeskRepository;
@@ -36,6 +33,6 @@ class RegisterHotDeskCommandHandlerTest {
         RegisterHotDeskCommandHandler handler = new RegisterHotDeskCommandHandler(repository);
         RegisterHotDeskCommand command = new RegisterHotDeskCommand("1");
 
-        assertThrows(DuplicatedHotDeskNumberException.class, () -> handler.handle(command));
+        assertThrows(DuplicatedHotDeskException.class, () -> handler.handle(command));
     }
 }

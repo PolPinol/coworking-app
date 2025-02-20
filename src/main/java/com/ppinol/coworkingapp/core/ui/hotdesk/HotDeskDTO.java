@@ -10,12 +10,12 @@ public class HotDeskDTO {
     @JsonCreator
     public HotDeskDTO(@JsonProperty("number") String number) {
         if (number == null) {
-            throw new InvalidInputNumberException("Missing 'number' field in request body.");
+            throw new InvalidRegisterHotDeskInputException("Missing 'number' field in request body.");
         }
 
         number = number.trim();
         if (number.isEmpty()) {
-            throw new InvalidInputNumberException("The 'number' field cannot be empty.");
+            throw new InvalidRegisterHotDeskInputException("The 'number' field cannot be empty.");
         }
 
         this.number = number;

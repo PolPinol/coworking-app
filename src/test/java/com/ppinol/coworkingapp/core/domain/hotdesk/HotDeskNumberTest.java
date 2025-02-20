@@ -1,7 +1,5 @@
-package com.ppinol.coworkingapp.core.domain;
+package com.ppinol.coworkingapp.core.domain.hotdesk;
 
-import com.ppinol.coworkingapp.core.domain.hotdesk.HotDeskNumber;
-import com.ppinol.coworkingapp.core.domain.hotdesk.InvalidHotDeskNumberException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
