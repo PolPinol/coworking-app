@@ -10,16 +10,16 @@ import java.util.List;
 
 @Repository
 public class InMemoryHotDeskRepository implements HotDeskRepository {
-    private final List<HotDesk> reservations = new ArrayList<>();
+    private final List<HotDesk> hotDesks = new ArrayList<>();
 
     @Override
     public void save(HotDesk hotDesk) {
-        reservations.add(hotDesk);
+        hotDesks.add(hotDesk);
     }
 
     @Override
     public HotDesk findByNumber(HotDeskNumber number) {
-        return reservations.stream()
+        return hotDesks.stream()
                 .filter(hotDesk -> hotDesk.getNumber().equals(number))
                 .findFirst()
                 .orElse(null);
@@ -27,6 +27,6 @@ public class InMemoryHotDeskRepository implements HotDeskRepository {
 
     @Override
     public void clear() {
-        reservations.clear();
+        hotDesks.clear();
     }
 }

@@ -1,4 +1,4 @@
-package com.ppinol.coworkingapp.core.ui;
+package com.ppinol.coworkingapp.core.ui.hotdesk;
 
 import com.ppinol.coworkingapp.core.domain.hotdesk.HotDesk;
 import com.ppinol.coworkingapp.core.domain.hotdesk.HotDeskNumber;

@@ -1,19 +1,13 @@
 package com.ppinol.coworkingapp.core.domain.hotdesk;
 
-import java.util.UUID;
+import com.ppinol.coworkingapp.core.domain.Id;
 
-public class HotDeskId {
-    private final String id;
-
+public class HotDeskId extends Id {
     HotDeskId(String id) {
-        this.id = id;
+        super(id);
     }
 
     public static HotDeskId generate() {
-        return new HotDeskId(UUID.randomUUID().toString());
-    }
-
-    public String id() {
-        return id;
+        return new HotDeskId(generateId());
     }
 }
