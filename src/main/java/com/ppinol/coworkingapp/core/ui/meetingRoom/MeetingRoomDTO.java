@@ -3,10 +3,7 @@ package com.ppinol.coworkingapp.core.ui.meetingRoom;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class MeetingRoomDTO {
-
-    private final String name;
-    private final String capacity;
+public record MeetingRoomDTO(String name, String capacity) {
 
     @JsonCreator
     public MeetingRoomDTO(@JsonProperty("name") String name, @JsonProperty("capacity") String capacity) {
@@ -20,14 +17,6 @@ public class MeetingRoomDTO {
 
         this.name = name;
         this.capacity = capacity;
-    }
-
-    public String name() {
-        return name;
-    }
-
-    public String capacity() {
-        return capacity;
     }
 }
 
