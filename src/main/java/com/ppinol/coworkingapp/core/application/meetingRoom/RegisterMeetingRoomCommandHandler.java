@@ -1,6 +1,5 @@
 package com.ppinol.coworkingapp.core.application.meetingRoom;
 
-import com.ppinol.coworkingapp.core.application.hotdesk.DuplicatedHotDeskException;
 import com.ppinol.coworkingapp.core.domain.meetingRoom.MeetingRoom;
 import com.ppinol.coworkingapp.core.domain.meetingRoom.MeetingRoomCapacity;
 import com.ppinol.coworkingapp.core.domain.meetingRoom.MeetingRoomName;

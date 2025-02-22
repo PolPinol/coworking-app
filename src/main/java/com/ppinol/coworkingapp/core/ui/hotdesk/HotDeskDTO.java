@@ -3,9 +3,7 @@ package com.ppinol.coworkingapp.core.ui.hotdesk;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class HotDeskDTO {
-
-    private final String number;
+public record HotDeskDTO(String number) {
 
     @JsonCreator
     public HotDeskDTO(@JsonProperty("number") String number) {
@@ -19,10 +17,6 @@ public class HotDeskDTO {
         }
 
         this.number = number;
-    }
-
-    public String number() {
-        return number;
     }
 }
 
