@@ -31,20 +31,25 @@ class RegisterOfficeControllerTest {
 
     @Test
     void testRegisterOfficeSuccess() throws Exception {
-        String json = "{\"number\":\"101\",\"leasePeriod\":\"24\",\"status\":\"Active\"}";
+        String json = "{\"number\":\"101\",\"leasePeriod\":24,\"status\":\"Active\"}";
         mockMvc.perform(post("/registerOffice")
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        Office office = repository.findByNumber(new OfficeNumber("101"));
+        Office office = repository.findByNumber(new OfficeNumber(101));
         assertThat(office).isNotNull();
+
+        assertThat(office.getId()).isNotNull();
+        assertThat(office.getCreatedAt()).isNotNull();
+        assertThat(office.getUpdatedAt()).isNotNull();
+        assertThat(office.getStatus().isActive()).isTrue();
+        assertThat(office.getLeasePeriod().value()).isEqualTo(24);
     }
 
     @Test
     void testRegisterOfficeInvalidInput() throws Exception {
-        // Invalid input: empty number field
-        String json = "{\"number\":\"   \",\"leasePeriod\":\"24\",\"status\":\"Active\"}";
+        String json = "{\"number\":\"   \",\"leasePeriod\":24,\"status\":\"Active\"}";
         mockMvc.perform(post("/registerOffice")
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -53,7 +58,7 @@ class RegisterOfficeControllerTest {
 
     @Test
     void testRegisterOfficeDuplicate() throws Exception {
-        String json = "{\"number\":\"101\",\"leasePeriod\":\"24\",\"status\":\"Active\"}";
+        String json = "{\"number\":\"101\",\"leasePeriod\":24,\"status\":\"Active\"}";
         mockMvc.perform(post("/registerOffice")
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -62,6 +67,6 @@ class RegisterOfficeControllerTest {
         mockMvc.perform(post("/registerOffice")
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isConflict());
+                .andExpect(status().is(498));
     }
 }

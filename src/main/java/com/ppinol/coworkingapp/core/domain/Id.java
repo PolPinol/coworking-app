@@ -6,7 +6,7 @@ import java.util.UUID;
 public abstract class Id {
     private final String id;
 
-    protected Id(String id) {
+    public Id(String id) {
         this.id = id;
     }
 

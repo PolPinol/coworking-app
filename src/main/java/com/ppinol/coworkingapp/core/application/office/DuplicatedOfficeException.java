@@ -1,6 +1,8 @@
 package com.ppinol.coworkingapp.core.application.office;
 
-public class DuplicatedOfficeException extends RuntimeException {
+import com.ppinol.coworkingapp.core.DuplicatedException;
+
+public class DuplicatedOfficeException extends DuplicatedException {
     public DuplicatedOfficeException(String message) {
         super(message);
     }

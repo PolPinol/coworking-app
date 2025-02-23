@@ -1,22 +1,17 @@
 package com.ppinol.coworkingapp.core.domain.meetingRoom;
 
-public class MeetingRoomCapacity {
+import com.ppinol.coworkingapp.core.domain.Number;
 
-    private final int capacity;
+public class MeetingRoomCapacity extends Number {
 
-    public MeetingRoomCapacity(String capacity) {
-        try {
-            this.capacity = Integer.parseInt(capacity);
-        } catch (NumberFormatException e) {
-            throw new InvalidMeetingRoomCapacityException("Meeting room must be a number");
-        }
-
-        if (this.capacity <= 0) {
-            throw new InvalidMeetingRoomCapacityException("Meeting room must be positive");
-        }
+    public MeetingRoomCapacity(int capacity) {
+        super(capacity);
     }
 
-    public int value() {
-        return capacity;
+    @Override
+    public void validate(int capacity) {
+        if (capacity <= 0) {
+            throw new InvalidMeetingRoomCapacityException("Meeting room must be positive");
+        }
     }
 }

@@ -19,9 +19,9 @@ public class RegisterMeetingRoomController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> handle(@RequestBody MeetingRoomDTO meetingRoomDTO) {
+    public ResponseEntity<Void> handle(@RequestBody RegisterMeetingRoomDTO dto) {
         commandHandler.handle(
-                new RegisterMeetingRoomCommand(meetingRoomDTO.name(), meetingRoomDTO.capacity())
+                new RegisterMeetingRoomCommand(dto.name(), dto.capacity())
         );
         return ResponseEntity.ok().build();
     }

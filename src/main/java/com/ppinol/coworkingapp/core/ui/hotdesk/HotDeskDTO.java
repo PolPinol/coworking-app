@@ -3,17 +3,12 @@ package com.ppinol.coworkingapp.core.ui.hotdesk;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record HotDeskDTO(String number) {
+public record HotDeskDTO(Integer number) {
 
     @JsonCreator
-    public HotDeskDTO(@JsonProperty("number") String number) {
+    public HotDeskDTO(@JsonProperty("number") Integer number) {
         if (number == null) {
             throw new InvalidRegisterHotDeskInputException("Missing 'number' field in request body.");
-        }
-
-        number = number.trim();
-        if (number.isEmpty()) {
-            throw new InvalidRegisterHotDeskInputException("The 'number' field cannot be empty.");
         }
 
         this.number = number;

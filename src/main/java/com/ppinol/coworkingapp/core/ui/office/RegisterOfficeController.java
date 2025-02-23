@@ -19,9 +19,9 @@ public class RegisterOfficeController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> handle(@RequestBody OfficeDTO officeDTO) {
+    public ResponseEntity<Void> handle(@RequestBody OfficeDTO dto) {
         commandHandler.handle(
-                new RegisterOfficeCommand(officeDTO.number(), officeDTO.leasePeriod(), officeDTO.status())
+                new RegisterOfficeCommand(dto.number(), dto.leasePeriod(), dto.status())
         );
         return ResponseEntity.ok().build();
     }

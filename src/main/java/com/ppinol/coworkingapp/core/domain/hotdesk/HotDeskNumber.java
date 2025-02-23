@@ -1,31 +1,17 @@
 package com.ppinol.coworkingapp.core.domain.hotdesk;
 
-public class HotDeskNumber {
-    private final int number;
+import com.ppinol.coworkingapp.core.domain.Number;
 
-    public HotDeskNumber(String number) {
-        try {
-            this.number = Integer.parseInt(number);
-        } catch (NumberFormatException e) {
-            throw new InvalidHotDeskNumberException("Desk number must be a number");
-        }
+public class HotDeskNumber extends Number {
 
-        if (this.number < 0) {
+    public HotDeskNumber(int number) {
+        super(number);
+    }
+
+    @Override
+    public void validate(int number) {
+        if (number <= 0) {
             throw new InvalidHotDeskNumberException("Desk number must be positive");
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof HotDeskNumber that)) return false;
-        return number == that.number;
-    }
-
-    @Override
-    public String toString() {
-        return "DeskNumber{" +
-                "number=" + number +
-                '}';
     }
 }

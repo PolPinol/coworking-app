@@ -1,6 +1,8 @@
 package com.ppinol.coworkingapp.core.application.meetingRoom;
 
-public class DuplicatedMeetingRoomException extends RuntimeException {
+import com.ppinol.coworkingapp.core.DuplicatedException;
+
+public class DuplicatedMeetingRoomException extends DuplicatedException {
     public DuplicatedMeetingRoomException(String message) {
         super(message);
     }

@@ -1,3 +1,3 @@
 package com.ppinol.coworkingapp.core.application.hotdesk;
 
-public record RegisterHotDeskCommand(String number) {}
+public record RegisterHotDeskCommand(int number) {}

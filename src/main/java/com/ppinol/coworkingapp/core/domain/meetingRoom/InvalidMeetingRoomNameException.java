@@ -1,6 +1,8 @@
 package com.ppinol.coworkingapp.core.domain.meetingRoom;
 
-public class InvalidMeetingRoomNameException extends RuntimeException {
+import com.ppinol.coworkingapp.core.BadRequestException;
+
+public class InvalidMeetingRoomNameException extends BadRequestException {
     public InvalidMeetingRoomNameException(String message) {
         super(message);
     }

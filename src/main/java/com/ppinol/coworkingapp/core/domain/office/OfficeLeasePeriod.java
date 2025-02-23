@@ -1,29 +1,20 @@
 package com.ppinol.coworkingapp.core.domain.office;
 
-public class OfficeLeasePeriod {
-    private static final String DEFAULT_LEASE_PERIOD = "12";
-    private final int number;
+import com.ppinol.coworkingapp.core.domain.Number;
 
-    public OfficeLeasePeriod(String number) {
-        if (number == null || number.isEmpty()) {
-            number = DEFAULT_LEASE_PERIOD;
-        }
+import java.util.OptionalInt;
 
-        try {
-            this.number = Integer.parseInt(number);
-        } catch (NumberFormatException e) {
-            throw new InvalidOfficeLeasePeriodException("Office lease period must be a number");
-        }
+public class OfficeLeasePeriod extends Number {
+    public static final int DEFAULT_LEASE_PERIOD = 12;
 
-        if (this.number < 0) {
-            throw new InvalidOfficeLeasePeriodException("Office lease period must be positive");
-        }
+    public OfficeLeasePeriod(OptionalInt number) {
+        super(number.orElse(DEFAULT_LEASE_PERIOD));
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof OfficeLeasePeriod that)) return false;
-        return number == that.number;
+    public void validate(int number) {
+        if (number < 0) {
+            throw new InvalidOfficeLeasePeriodException("Office lease period must be positive");
+        }
     }
 }

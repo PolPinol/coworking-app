@@ -17,8 +17,8 @@ public class RegisterHotDeskController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> handle(@RequestBody HotDeskDTO hotDeskDTO) {
-        commandHandler.handle(new RegisterHotDeskCommand(hotDeskDTO.number()));
+    public ResponseEntity<Void> handle(@RequestBody HotDeskDTO dto) {
+        commandHandler.handle(new RegisterHotDeskCommand(dto.number()));
         return ResponseEntity.ok().build();
     }
 }
