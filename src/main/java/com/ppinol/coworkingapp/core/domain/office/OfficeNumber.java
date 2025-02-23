@@ -1,24 +1,17 @@
 package com.ppinol.coworkingapp.core.domain.office;
 
-public class OfficeNumber {
-    private final int number;
+import com.ppinol.coworkingapp.core.domain.Number;
 
-    public OfficeNumber(String number) {
-        try {
-            this.number = Integer.parseInt(number);
-        } catch (NumberFormatException e) {
-            throw new InvalidOfficeNumberException("Office number must be an integer");
-        }
+public class OfficeNumber extends Number {
 
-        if (this.number < 0) {
-            throw new InvalidOfficeNumberException("Office number must be positive");
-        }
+    public OfficeNumber(int number) {
+        super(number);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof OfficeNumber that)) return false;
-        return number == that.number;
+    public void validate(int number) {
+        if (number < 0) {
+            throw new InvalidOfficeNumberException("Office number must be positive");
+        }
     }
 }

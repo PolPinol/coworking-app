@@ -1,6 +1,8 @@
 package com.ppinol.coworkingapp.core.domain.meetingRoom;
 
-public class InvalidMeetingRoomCapacityException extends RuntimeException {
+import com.ppinol.coworkingapp.core.BadRequestException;
+
+public class InvalidMeetingRoomCapacityException extends BadRequestException {
     public InvalidMeetingRoomCapacityException(String message) {
         super(message);
     }

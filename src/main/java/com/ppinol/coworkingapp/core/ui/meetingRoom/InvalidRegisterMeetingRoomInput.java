@@ -1,6 +1,8 @@
 package com.ppinol.coworkingapp.core.ui.meetingRoom;
 
-public class InvalidRegisterMeetingRoomInput extends RuntimeException {
+import com.ppinol.coworkingapp.core.BadRequestException;
+
+public class InvalidRegisterMeetingRoomInput extends BadRequestException {
     public InvalidRegisterMeetingRoomInput(String message) {
         super(message);
     }

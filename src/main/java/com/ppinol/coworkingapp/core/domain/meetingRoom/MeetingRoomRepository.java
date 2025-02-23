@@ -6,5 +6,6 @@ import com.ppinol.coworkingapp.core.domain.hotdesk.HotDeskNumber;
 public interface MeetingRoomRepository {
     void save(MeetingRoom meetingRoom);
     MeetingRoom findByName(MeetingRoomName name);
+    MeetingRoom findById(MeetingRoomId id);
     void clear();
 }

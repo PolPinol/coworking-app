@@ -10,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,58 +25,46 @@ class RegisterMeetingRoomControllerTest {
     private InMemoryMeetingRoomRepository repository;
 
     @BeforeEach
-    void clearRepository() {
+    void setUp() {
         repository.clear();
     }
 
     @Test
     void testRegisterMeetingRoomSuccess() throws Exception {
-        String json = "{\"name\":\"Room A\",\"capacity\":\"20\"}";
+        String json = "{\"name\":\"Room A\",\"capacity\":10}";
         mockMvc.perform(post("/registerMeetingRoom")
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        MeetingRoom found = repository.findByName(new MeetingRoomName("Room A"));
-        assertThat(found).isNotNull();
-        assertThat(found.getName().value()).isEqualTo("Room A");
-        assertThat(found.getCapacity().value()).isEqualTo(20);
+        MeetingRoom room = repository.findByName(new MeetingRoomName("Room A"));
+        assertThat(room).isNotNull();
 
-        assertThat(found.getStatus()).isNotNull();
-        assertThat(found.getCreatedAt()).isNotNull();
-        assertThat(found.getUpdatedAt()).isNotNull();
+        assertThat(room.getId()).isNotNull();
+        assertThat(room.getCreatedAt()).isNotNull();
+        assertThat(room.getUpdatedAt()).isNotNull();
+        assertThat(room.getStatus().isActive()).isTrue();
+        assertThat(room.getCapacity().value()).isEqualTo(10);
     }
 
     @Test
-    void testRegisterMeetingRoomInvalidNameInput() throws Exception {
-        String json = "{\"name\":\"\",\"capacity\":\"20\"}";
+    void testRegisterMeetingRoomInvalidInput() throws Exception {
+        String jsonEmptyName = "{\"name\":\"\",\"capacity\":10}";
         mockMvc.perform(post("/registerMeetingRoom")
-                        .content(json)
+                        .content(jsonEmptyName)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
-    }
 
-    @Test
-    void testRegisterMeetingRoomInvalidCapacityInput() throws Exception {
-        String json = "{\"name\":\"Room A\",\"capacity\":\"0\"}";
+        String jsonInvalidCapacity = "{\"name\":\"Room B\",\"capacity\":0}";
         mockMvc.perform(post("/registerMeetingRoom")
-                        .content(json)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void testRegisterMeetingRoomNegativeCapacityInput() throws Exception {
-        String json = "{\"name\":\"Room A\",\"capacity\":\"-3\"}";
-        mockMvc.perform(post("/registerMeetingRoom")
-                        .content(json)
+                        .content(jsonInvalidCapacity)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void testRegisterMeetingRoomDuplicate() throws Exception {
-        String json = "{\"name\":\"Room A\",\"capacity\":\"20\"}";
+        String json = "{\"name\":\"Room A\",\"capacity\":10}";
         mockMvc.perform(post("/registerMeetingRoom")
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -86,6 +73,6 @@ class RegisterMeetingRoomControllerTest {
         mockMvc.perform(post("/registerMeetingRoom")
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isConflict());
+                .andExpect(status().is(498));
     }
 }

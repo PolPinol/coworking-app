@@ -1,6 +1,8 @@
 package com.ppinol.coworkingapp.core.domain.office;
 
-public class InvalidOfficeNumberException extends RuntimeException {
+import com.ppinol.coworkingapp.core.BadRequestException;
+
+public class InvalidOfficeNumberException extends BadRequestException {
     public InvalidOfficeNumberException(String message) {
         super(message);
     }

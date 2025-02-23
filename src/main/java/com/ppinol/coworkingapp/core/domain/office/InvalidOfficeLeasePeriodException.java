@@ -1,6 +1,8 @@
 package com.ppinol.coworkingapp.core.domain.office;
 
-public class InvalidOfficeLeasePeriodException extends RuntimeException {
+import com.ppinol.coworkingapp.core.BadRequestException;
+
+public class InvalidOfficeLeasePeriodException extends BadRequestException {
     public InvalidOfficeLeasePeriodException(String message) {
         super(message);
     }

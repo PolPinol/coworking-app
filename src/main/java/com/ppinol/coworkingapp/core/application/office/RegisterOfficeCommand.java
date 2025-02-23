@@ -1,3 +1,6 @@
 package com.ppinol.coworkingapp.core.application.office;
 
-public record RegisterOfficeCommand(String number, String leasePeriod, String status) {}
+import java.util.Optional;
+import java.util.OptionalInt;
+
+public record RegisterOfficeCommand(int number, OptionalInt leasePeriod, Optional<String> status) {}

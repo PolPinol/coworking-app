@@ -17,7 +17,7 @@ class RegisterHotDeskCommandHandlerTest {
         when(repository.findByNumber(any(HotDeskNumber.class))).thenReturn(null);
 
         RegisterHotDeskCommandHandler handler = new RegisterHotDeskCommandHandler(repository);
-        RegisterHotDeskCommand command = new RegisterHotDeskCommand("1");
+        RegisterHotDeskCommand command = new RegisterHotDeskCommand(1);
 
         handler.handle(command);
 
@@ -27,11 +27,11 @@ class RegisterHotDeskCommandHandlerTest {
     @Test
     void testDuplicateHotDeskNumber() {
         HotDeskRepository repository = mock(HotDeskRepository.class);
-        HotDesk existingDesk = new HotDesk(new HotDeskNumber("1"));
+        HotDesk existingDesk = new HotDesk(new HotDeskNumber(1));
         when(repository.findByNumber(any(HotDeskNumber.class))).thenReturn(existingDesk);
 
         RegisterHotDeskCommandHandler handler = new RegisterHotDeskCommandHandler(repository);
-        RegisterHotDeskCommand command = new RegisterHotDeskCommand("1");
+        RegisterHotDeskCommand command = new RegisterHotDeskCommand(1);
 
         assertThrows(DuplicatedHotDeskException.class, () -> handler.handle(command));
     }

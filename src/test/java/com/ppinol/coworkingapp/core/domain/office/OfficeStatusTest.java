@@ -1,36 +1,41 @@
 package com.ppinol.coworkingapp.core.domain.office;
 
+import com.ppinol.coworkingapp.core.domain.InvalidStatusException;
 import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class OfficeStatusTest {
 
     @Test
     void testValidStatusActive() {
-        OfficeStatus status = new OfficeStatus("Active");
-        assertEquals("Active", status.getStatus());
+        Optional<String> value = Optional.of(OfficeStatus.ACTIVE);
+        OfficeStatus status = new OfficeStatus(value);
+        assertTrue(status.isActive());
     }
 
     @Test
     void testValidStatusInactive() {
-        OfficeStatus status = new OfficeStatus("Inactive");
-        assertEquals("Inactive", status.getStatus());
+        Optional<String> value = Optional.of(OfficeStatus.INACTIVE);
+        OfficeStatus status = new OfficeStatus(value);
+        assertFalse(status.isActive());
     }
 
     @Test
-    void testNullOrEmptyStatusUsesDefault() {
-        OfficeStatus statusNull = new OfficeStatus(null);
-        OfficeStatus statusEmpty = new OfficeStatus("");
-        // default is "Active"
-        assertEquals("Active", statusNull.getStatus());
-        assertEquals("Active", statusEmpty.getStatus());
+    void testEmptyStatusUsesDefault() {
+        Optional<String> value = Optional.empty();
+        OfficeStatus statusNull = new OfficeStatus(value);
+        assertTrue(statusNull.isActive());
     }
 
     @Test
     void testInvalidStatusThrowsException() {
-        Exception exception = assertThrows(InvalidOfficeStatusException.class, () -> {
-            new OfficeStatus("Busy");
+        Exception exception = assertThrows(InvalidStatusException.class, () -> {
+            Optional<String> value = Optional.of("Busy");
+            new OfficeStatus(value);
         });
-        assertEquals("Invalid office status: Busy", exception.getMessage());
+        assertEquals("Invalid status: Busy", exception.getMessage());
     }
 }

@@ -1,6 +1,8 @@
 package com.ppinol.coworkingapp.core.ui.hotdesk;
 
-public class InvalidRegisterHotDeskInputException extends RuntimeException {
+import com.ppinol.coworkingapp.core.BadRequestException;
+
+public class InvalidRegisterHotDeskInputException extends BadRequestException {
     public InvalidRegisterHotDeskInputException(String message) {
         super(message);
     }

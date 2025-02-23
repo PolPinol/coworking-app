@@ -1,6 +1,7 @@
 package com.ppinol.coworkingapp.core.infrastructure;
 
 import com.ppinol.coworkingapp.core.domain.meetingRoom.MeetingRoom;
+import com.ppinol.coworkingapp.core.domain.meetingRoom.MeetingRoomId;
 import com.ppinol.coworkingapp.core.domain.meetingRoom.MeetingRoomName;
 import com.ppinol.coworkingapp.core.domain.meetingRoom.MeetingRoomRepository;
 import org.springframework.stereotype.Repository;
@@ -14,6 +15,11 @@ public class InMemoryMeetingRoomRepository implements MeetingRoomRepository {
 
     @Override
     public void save(MeetingRoom meetingRoom) {
+        MeetingRoom existingMeetingRoom = findById(meetingRoom.getId());
+        if (existingMeetingRoom != null) {
+            meetingRooms.remove(existingMeetingRoom);
+            meetingRoom.markAsUpdated();
+        }
         meetingRooms.add(meetingRoom);
     }
 
@@ -21,6 +27,14 @@ public class InMemoryMeetingRoomRepository implements MeetingRoomRepository {
     public MeetingRoom findByName(MeetingRoomName name) {
         return meetingRooms.stream()
                 .filter(room -> room.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public MeetingRoom findById(MeetingRoomId id) {
+        return meetingRooms.stream()
+                .filter(room -> room.getId().equals(id))
                 .findFirst()
                 .orElse(null);
     }

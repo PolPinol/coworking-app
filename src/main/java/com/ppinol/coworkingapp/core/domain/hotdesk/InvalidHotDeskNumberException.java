@@ -1,6 +1,8 @@
 package com.ppinol.coworkingapp.core.domain.hotdesk;
 
-public class InvalidHotDeskNumberException extends RuntimeException {
+import com.ppinol.coworkingapp.core.BadRequestException;
+
+public class InvalidHotDeskNumberException extends BadRequestException {
     public InvalidHotDeskNumberException(String message) {
         super(message);
     }

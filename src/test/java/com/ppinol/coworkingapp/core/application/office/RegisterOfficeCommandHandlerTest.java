@@ -1,11 +1,12 @@
 package com.ppinol.coworkingapp.core.application.office;
 
-import com.ppinol.coworkingapp.core.domain.office.Office;
-import com.ppinol.coworkingapp.core.domain.office.OfficeNumber;
-import com.ppinol.coworkingapp.core.domain.office.OfficeRepository;
-import com.ppinol.coworkingapp.core.domain.office.OfficeLeasePeriod;
-import com.ppinol.coworkingapp.core.domain.office.OfficeStatus;
+import com.ppinol.coworkingapp.core.domain.InvalidStatusException;
+import com.ppinol.coworkingapp.core.domain.office.*;
 import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
+import java.util.OptionalInt;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -18,7 +19,9 @@ class RegisterOfficeCommandHandlerTest {
         when(repository.findByNumber(any())).thenReturn(null);
 
         RegisterOfficeCommandHandler handler = new RegisterOfficeCommandHandler(repository);
-        RegisterOfficeCommand command = new RegisterOfficeCommand("101", "24", "Active");
+        OptionalInt leasePeriod = OptionalInt.of(101);
+        Optional<String> status = Optional.of(OfficeStatus.ACTIVE);
+        RegisterOfficeCommand command = new RegisterOfficeCommand(101, leasePeriod, status);
 
         handler.handle(command);
 
@@ -29,11 +32,14 @@ class RegisterOfficeCommandHandlerTest {
     void testRegisterOfficeDuplicateThrowsException() {
         OfficeRepository repository = mock(OfficeRepository.class);
 
-        when(repository.findByNumber(any())).thenReturn(new Office(new OfficeNumber("101"),
-                new OfficeLeasePeriod("24"), new OfficeStatus("Active")));
+        OptionalInt leasePeriod = OptionalInt.of(24);
+        Optional<String> status = Optional.of(OfficeStatus.ACTIVE);
+
+        when(repository.findByNumber(any())).thenReturn(new Office(new OfficeNumber(101),
+                new OfficeLeasePeriod(leasePeriod), new OfficeStatus(status)));
 
         RegisterOfficeCommandHandler handler = new RegisterOfficeCommandHandler(repository);
-        RegisterOfficeCommand command = new RegisterOfficeCommand("101", "24", "Active");
+        RegisterOfficeCommand command = new RegisterOfficeCommand(101, leasePeriod, status);
 
         Exception exception = assertThrows(DuplicatedOfficeException.class, () -> handler.handle(command));
         assertEquals("Office already exists", exception.getMessage());
@@ -44,23 +50,29 @@ class RegisterOfficeCommandHandlerTest {
         OfficeRepository repository = mock(OfficeRepository.class);
         when(repository.findByNumber(any())).thenReturn(null);
 
-        RegisterOfficeCommandHandler handler = new RegisterOfficeCommandHandler(repository);
-        RegisterOfficeCommand command = new RegisterOfficeCommand("102", "invalid", "Active");
+        OptionalInt leasePeriod = OptionalInt.of(-1);
+        Optional<String> status = Optional.of(OfficeStatus.ACTIVE);
 
-        Exception exception = assertThrows(RuntimeException.class, () -> handler.handle(command));
-        assertEquals("Office lease period must be a number", exception.getMessage());
+        RegisterOfficeCommandHandler handler = new RegisterOfficeCommandHandler(repository);
+        RegisterOfficeCommand command = new RegisterOfficeCommand(102, leasePeriod, status);
+
+        Exception exception = assertThrows(InvalidOfficeLeasePeriodException.class, () -> handler.handle(command));
+        assertEquals("Office lease period must be positive", exception.getMessage());
     }
 
     @Test
-    void testRegisterOfficeInvalidOfficeNumberThrowsException() {
+    void testRegisterOfficeDefaultLeasePeriod() {
         OfficeRepository repository = mock(OfficeRepository.class);
         when(repository.findByNumber(any())).thenReturn(null);
 
-        RegisterOfficeCommandHandler handler = new RegisterOfficeCommandHandler(repository);
-        RegisterOfficeCommand command = new RegisterOfficeCommand("abc", "24", "Active");
+        Optional<String> status = Optional.of(OfficeStatus.ACTIVE);
 
-        Exception exception = assertThrows(RuntimeException.class, () -> handler.handle(command));
-        assertEquals("Office number must be an integer", exception.getMessage());
+        RegisterOfficeCommandHandler handler = new RegisterOfficeCommandHandler(repository);
+        RegisterOfficeCommand command = new RegisterOfficeCommand(102, OptionalInt.empty(), status);
+
+        handler.handle(command);
+
+        verify(repository, times(1)).save(any(Office.class));
     }
 
     @Test
@@ -68,10 +80,13 @@ class RegisterOfficeCommandHandlerTest {
         OfficeRepository repository = mock(OfficeRepository.class);
         when(repository.findByNumber(any())).thenReturn(null);
 
-        RegisterOfficeCommandHandler handler = new RegisterOfficeCommandHandler(repository);
-        RegisterOfficeCommand command = new RegisterOfficeCommand("103", "24", "Busy");
+        OptionalInt leasePeriod = OptionalInt.of(101);
+        Optional<String> status = Optional.of("Busy");
 
-        Exception exception = assertThrows(RuntimeException.class, () -> handler.handle(command));
-        assertEquals("Invalid office status: Busy", exception.getMessage());
+        RegisterOfficeCommandHandler handler = new RegisterOfficeCommandHandler(repository);
+        RegisterOfficeCommand command = new RegisterOfficeCommand(103, leasePeriod, status);
+
+        Exception exception = assertThrows(InvalidStatusException.class, () -> handler.handle(command));
+        assertEquals("Invalid status: Busy", exception.getMessage());
     }
 }

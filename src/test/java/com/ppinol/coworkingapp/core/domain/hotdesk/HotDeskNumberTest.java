@@ -8,22 +8,14 @@ class HotDeskNumberTest {
 
     @Test
     void testValidNumber() {
-        HotDeskNumber number = new HotDeskNumber("5");
-        assertEquals("DeskNumber{number=5}", number.toString());
-    }
-
-    @Test
-    void testInvalidFormatThrowsException() {
-        Exception exception = assertThrows(InvalidHotDeskNumberException.class, () -> {
-            new HotDeskNumber("abc");
-        });
-        assertEquals("Desk number must be a number", exception.getMessage());
+        HotDeskNumber number = new HotDeskNumber(5);
+        assertEquals("HotDeskNumber{number=5}", number.toString());
     }
 
     @Test
     void testNegativeNumberThrowsException() {
         Exception exception = assertThrows(InvalidHotDeskNumberException.class, () -> {
-            new HotDeskNumber("-10");
+            new HotDeskNumber(-10);
         });
         assertEquals("Desk number must be positive", exception.getMessage());
     }

@@ -10,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,41 +25,47 @@ class RegisterHotDeskControllerTest {
     private InMemoryHotDeskRepository repository;
 
     @BeforeEach
-    void clearRepository() {
+    void setUp() {
         repository.clear();
     }
 
     @Test
     void testRegisterHotDeskSuccess() throws Exception {
+        String json = "{\"number\":1}";
         mockMvc.perform(post("/registerHotDesk")
-                        .content("{\"number\":\"5\"}")
+                        .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        HotDeskNumber number = new HotDeskNumber("5");
-        HotDesk storedHotDesk = repository.findByNumber(number);
-        assertThat(storedHotDesk).isNotNull();
-        assertThat(storedHotDesk.getNumber().toString()).isEqualTo(number.toString());
+        HotDesk hotDesk = repository.findByNumber(new HotDeskNumber(1));
+        assertThat(hotDesk).isNotNull();
+
+        assertThat(hotDesk.getId()).isNotNull();
+        assertThat(hotDesk.getCreatedAt()).isNotNull();
+        assertThat(hotDesk.getUpdatedAt()).isNotNull();
+        assertThat(hotDesk.getStatus().isActive()).isTrue();
     }
 
     @Test
-    void testRegisterHotDeskInvalidNumber() throws Exception {
+    void testRegisterHotDeskInvalidInput() throws Exception {
+        String json = "{\"number\":0}";
         mockMvc.perform(post("/registerHotDesk")
-                        .content("invalid")
+                        .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void testRegisterHotDeskDuplicate() throws Exception {
+        String json = "{\"number\":1}";
         mockMvc.perform(post("/registerHotDesk")
-                        .content("{\"number\":\"10\"}")
+                        .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         mockMvc.perform(post("/registerHotDesk")
-                        .content("{\"number\":\"10\"}")
+                        .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isConflict());
+                .andExpect(status().is(498));
     }
 }
