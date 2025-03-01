@@ -22,8 +22,7 @@ public class RegisterMeetingRoomCommandHandler {
             throw new DuplicatedMeetingRoomException("MeetingRoom name already exists");
         }
 
-        MeetingRoomCapacity capacity = new MeetingRoomCapacity(command.capacity());
-        MeetingRoom meetingRoom = new MeetingRoom(name, capacity);
+        MeetingRoom meetingRoom = new MeetingRoom(name.value(), command.capacity());
         this.repository.save(meetingRoom);
     }
 }

@@ -19,9 +19,7 @@ public class RegisterOfficeCommandHandler {
             throw new DuplicatedOfficeException("Office already exists");
         }
 
-        OfficeLeasePeriod leasePeriod = new OfficeLeasePeriod(command.leasePeriod());
-        OfficeStatus status = new OfficeStatus(command.status());
-        Office office = new Office(number, leasePeriod, status);
+        Office office = new Office(number.value(), command.leasePeriod(), command.status());
         this.repository.save(office);
     }
 }

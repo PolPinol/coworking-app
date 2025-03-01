@@ -1,11 +1,10 @@
 package com.ppinol.coworkingapp.core.domain.hotdesk;
 
-import com.ppinol.coworkingapp.core.domain.hotdesk.reservation.HotDeskReservationDate;
+import java.util.List;
 
 public interface HotDeskRepository {
     void save(HotDesk hotDesk);
+    List<HotDesk> findAll();
     HotDesk findByNumber(HotDeskNumber number);
-    HotDesk findById(HotDeskId id);
-    HotDesk findFirstAvailable(HotDeskReservationDate date);
     void clear();
 }

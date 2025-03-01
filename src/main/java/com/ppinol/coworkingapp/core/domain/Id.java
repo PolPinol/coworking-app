@@ -10,7 +10,7 @@ public abstract class Id {
         this.id = id;
     }
 
-    public String id() {
+    public String value() {
         return id;
     }
 

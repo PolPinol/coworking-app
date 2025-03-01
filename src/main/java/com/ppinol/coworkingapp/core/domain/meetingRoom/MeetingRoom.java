@@ -1,11 +1,6 @@
 package com.ppinol.coworkingapp.core.domain.meetingRoom;
 
-import com.ppinol.coworkingapp.core.domain.meetingRoom.reservation.MeetingRoomReservation;
-import com.ppinol.coworkingapp.core.domain.meetingRoom.reservation.OverlappingMeetingRoomReservationException;
-
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class MeetingRoom {
     private final MeetingRoomId id;
@@ -15,16 +10,13 @@ public class MeetingRoom {
     private final Date createdAt;
     private Date updatedAt;
 
-    private final List<MeetingRoomReservation> reservations;
-
-    public MeetingRoom(MeetingRoomName name, MeetingRoomCapacity capacity) {
+    public MeetingRoom(String name, int capacity) {
         this.id = MeetingRoomId.generate();
-        this.name = name;
-        this.capacity = capacity;
+        this.name = new MeetingRoomName(name);
+        this.capacity = new MeetingRoomCapacity(capacity);
         this.status = MeetingRoomStatus.create();
         this.createdAt = new Date();
         this.updatedAt = new Date();
-        this.reservations = new ArrayList<>();
     }
 
     public MeetingRoomId getId() {
@@ -53,15 +45,5 @@ public class MeetingRoom {
 
     public void markAsUpdated() {
         this.updatedAt = new Date();
-    }
-
-    public void reserve(MeetingRoomReservation newReservation) {
-        for (MeetingRoomReservation existingReservation : this.reservations) {
-            if (existingReservation.overlapsWith(newReservation)) {
-                throw new OverlappingMeetingRoomReservationException("Reservation overlaps with an existing reservation");
-            }
-        }
-
-        this.reservations.add(newReservation);
     }
 }

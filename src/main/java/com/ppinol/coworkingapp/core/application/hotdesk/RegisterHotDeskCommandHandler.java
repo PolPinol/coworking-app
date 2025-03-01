@@ -21,7 +21,7 @@ public class RegisterHotDeskCommandHandler {
             throw new DuplicatedHotDeskException("HotDesk number already exists");
         }
 
-        HotDesk hotDesk = new HotDesk(number);
+        HotDesk hotDesk = new HotDesk(number.value());
         this.repository.save(hotDesk);
     }
 }

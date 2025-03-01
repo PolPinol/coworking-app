@@ -4,9 +4,15 @@ import com.ppinol.coworkingapp.core.domain.Status;
 
 import java.util.Optional;
 
-public class OfficeStatus extends Status {
+public class OfficeStatus {
+
+    private Status status;
 
     public OfficeStatus(Optional<String> status) {
-        super(status.orElse(ACTIVE));
+        this.status = status.map(Status::from).orElse(Status.ACTIVE);
+    }
+
+    public Status value() {
+        return status;
     }
 }
