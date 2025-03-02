@@ -1,5 +1,6 @@
 package com.ppinol.coworkingapp.core.application.office;
 
+import com.ppinol.coworkingapp.core.domain.EventPublisher;
 import com.ppinol.coworkingapp.core.domain.office.*;
 import org.springframework.stereotype.Service;
 
@@ -7,9 +8,12 @@ import org.springframework.stereotype.Service;
 public class RegisterOfficeCommandHandler {
 
     private final OfficeRepository repository;
+    private final EventPublisher eventPublisher;
 
-    public RegisterOfficeCommandHandler(OfficeRepository repository) {
+    public RegisterOfficeCommandHandler(OfficeRepository repository,
+                                        EventPublisher eventPublisher) {
         this.repository = repository;
+        this.eventPublisher = eventPublisher;
     }
 
     public void handle(RegisterOfficeCommand command) {
@@ -19,9 +23,9 @@ public class RegisterOfficeCommandHandler {
             throw new DuplicatedOfficeException("Office already exists");
         }
 
-        OfficeLeasePeriod leasePeriod = new OfficeLeasePeriod(command.leasePeriod());
-        OfficeStatus status = new OfficeStatus(command.status());
-        Office office = new Office(number, leasePeriod, status);
+        Office office = new Office(number.value(), command.leasePeriod(), command.status());
         this.repository.save(office);
+
+        this.eventPublisher.publish(office.releaseEvents());
     }
 }

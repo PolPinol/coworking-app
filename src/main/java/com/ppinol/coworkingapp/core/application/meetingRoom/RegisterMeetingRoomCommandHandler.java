@@ -1,5 +1,6 @@
 package com.ppinol.coworkingapp.core.application.meetingRoom;
 
+import com.ppinol.coworkingapp.core.domain.EventPublisher;
 import com.ppinol.coworkingapp.core.domain.meetingRoom.MeetingRoom;
 import com.ppinol.coworkingapp.core.domain.meetingRoom.MeetingRoomCapacity;
 import com.ppinol.coworkingapp.core.domain.meetingRoom.MeetingRoomName;
@@ -10,9 +11,11 @@ import org.springframework.stereotype.Service;
 public class RegisterMeetingRoomCommandHandler {
 
     private final MeetingRoomRepository repository;
+    private final EventPublisher eventPublisher;
 
-    public RegisterMeetingRoomCommandHandler(MeetingRoomRepository repository) {
+    public RegisterMeetingRoomCommandHandler(MeetingRoomRepository repository, EventPublisher eventPublisher) {
         this.repository = repository;
+        this.eventPublisher = eventPublisher;
     }
 
     public void handle(RegisterMeetingRoomCommand command) {
@@ -22,8 +25,9 @@ public class RegisterMeetingRoomCommandHandler {
             throw new DuplicatedMeetingRoomException("MeetingRoom name already exists");
         }
 
-        MeetingRoomCapacity capacity = new MeetingRoomCapacity(command.capacity());
-        MeetingRoom meetingRoom = new MeetingRoom(name, capacity);
+        MeetingRoom meetingRoom = new MeetingRoom(name.value(), command.capacity());
         this.repository.save(meetingRoom);
+
+        this.eventPublisher.publish(meetingRoom.releaseEvents());
     }
 }

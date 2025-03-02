@@ -17,12 +17,12 @@ public abstract class Date {
         }
     }
 
-    public LocalDate getDate() {
+    public LocalDate value() {
         return date;
     }
 
     public boolean isSameDay(Date other) {
-        return this.date.equals(other.getDate());
+        return this.date.equals(other.value());
     }
 
     public boolean isToday() {

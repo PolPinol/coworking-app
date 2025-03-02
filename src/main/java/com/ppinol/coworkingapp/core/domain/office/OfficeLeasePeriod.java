@@ -13,7 +13,7 @@ public class OfficeLeasePeriod extends Number {
 
     @Override
     public void validate(int number) {
-        if (number < 0) {
+        if (number <= 0) {
             throw new InvalidOfficeLeasePeriodException("Office lease period must be positive");
         }
     }

@@ -2,13 +2,19 @@ package com.ppinol.coworkingapp.core.domain.meetingRoom;
 
 import com.ppinol.coworkingapp.core.domain.Status;
 
-public class MeetingRoomStatus extends Status {
+public class MeetingRoomStatus {
 
-    MeetingRoomStatus(String status) {
-        super(status);
+    private Status status;
+
+    MeetingRoomStatus(Status status) {
+        this.status = status;
     }
 
     public static MeetingRoomStatus create() {
-        return new MeetingRoomStatus(ACTIVE);
+        return new MeetingRoomStatus(Status.ACTIVE);
+    }
+
+    public Status value() {
+        return status;
     }
 }

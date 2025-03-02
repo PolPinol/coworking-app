@@ -15,11 +15,6 @@ public class InMemoryMeetingRoomRepository implements MeetingRoomRepository {
 
     @Override
     public void save(MeetingRoom meetingRoom) {
-        MeetingRoom existingMeetingRoom = findById(meetingRoom.getId());
-        if (existingMeetingRoom != null) {
-            meetingRooms.remove(existingMeetingRoom);
-            meetingRoom.markAsUpdated();
-        }
         meetingRooms.add(meetingRoom);
     }
 
