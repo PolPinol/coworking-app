@@ -1,8 +1,10 @@
 package com.ppinol.coworkingapp.core.domain.hotdesk;
 
+import com.ppinol.coworkingapp.core.domain.AggregateRoot;
+
 import java.util.Date;
 
-public class HotDesk {
+public class HotDesk extends AggregateRoot {
     private final HotDeskId id;
     private final HotDeskNumber number;
     private HotDeskStatus status;
@@ -15,6 +17,8 @@ public class HotDesk {
         this.status = HotDeskStatus.create();
         this.createdAt = new Date();
         this.updatedAt = new Date();
+
+        this.recordEvent(HotDeskWasRegisteredEvent.from(this));
     }
 
     public HotDeskId getId() {

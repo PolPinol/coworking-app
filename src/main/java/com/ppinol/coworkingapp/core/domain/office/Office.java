@@ -1,10 +1,12 @@
 package com.ppinol.coworkingapp.core.domain.office;
 
+import com.ppinol.coworkingapp.core.domain.AggregateRoot;
+
 import java.util.Date;
 import java.util.Optional;
 import java.util.OptionalInt;
 
-public class Office {
+public class Office extends AggregateRoot {
     private final OfficeId id;
     private final OfficeNumber number;
     private final OfficeLeasePeriod leasePeriod;
@@ -19,6 +21,8 @@ public class Office {
         this.status = new OfficeStatus(status);
         this.createdAt = new Date();
         this.updatedAt = new Date();
+
+        this.recordEvent(OfficeWasRegisteredEvent.from(this));
     }
 
     public OfficeId getId() {

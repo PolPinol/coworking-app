@@ -1,5 +1,6 @@
 package com.ppinol.coworkingapp.core.application.hotdesk;
 
+import com.ppinol.coworkingapp.core.domain.EventPublisher;
 import com.ppinol.coworkingapp.core.domain.UserId;
 import com.ppinol.coworkingapp.core.domain.membership.MembershipRepository;
 import com.ppinol.coworkingapp.core.domain.hotdesk.HotDesk;
@@ -19,35 +20,44 @@ public class ReserveHotDeskCommandHandler {
     private final HotDeskRepository hotDeskRepository;
     private final HotDeskReservationRepository reservationRepository;
     private final MembershipRepository membershipRepository;
+    private final EventPublisher eventPublisher;
 
     public ReserveHotDeskCommandHandler(HotDeskRepository hotDeskRepository,
                                         HotDeskReservationRepository hotDeskReservationRepository,
-                                        MembershipRepository membershipRepository) {
+                                        MembershipRepository membershipRepository,
+                                        EventPublisher eventPublisher) {
         this.hotDeskRepository = hotDeskRepository;
         this.reservationRepository = hotDeskReservationRepository;
         this.membershipRepository = membershipRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     public void handle(ReserveHotDeskCommand command) {
-        HotDeskReservationDate date = new HotDeskReservationDate(command.date());
-        UserId userId = new UserId(command.userId());
+        try {
+            HotDeskReservationDate date = new HotDeskReservationDate(command.date());
+            UserId userId = new UserId(command.userId());
 
-        if (reservationRepository.find(userId, date) != null) {
-            throw new UserAlreadyHasReservationException("User already has a reservation for date " + command.date());
+            if (this.reservationRepository.find(userId, date) != null) {
+                throw new UserAlreadyHasReservationException("User already has a reservation for date " + command.date());
+            }
+
+            Optional<HotDesk> availableDesk = this.hotDeskRepository.findAll().stream()
+                    .filter(hotDesk -> this.reservationRepository.isHotDeskAvailable(hotDesk.getId(), date))
+                    .findFirst();
+
+            if (availableDesk.isEmpty()) {
+                throw new NoAvailableHotDeskException("No available hot desk for date " + command.date());
+            }
+
+            HotDeskReservation newReservation = new HotDeskReservation(availableDesk.get().getId(), userId, command.date());
+            this.reservationRepository.save(newReservation);
+
+            RequestGetInformationFromMembershipDTO request = new RequestGetInformationFromMembershipDTO(userId, date);
+            this.membershipRepository.getInformation(request);
+
+            this.eventPublisher.publish(newReservation.releaseEvents());
+        } catch (RuntimeException ex) {
+            if (!command.courtesy()) throw ex;
         }
-
-        Optional<HotDesk> availableDesk = this.hotDeskRepository.findAll().stream()
-                .filter(hotDesk -> reservationRepository.isHotDeskAvailable(hotDesk.getId(), date))
-                .findFirst();
-
-        if (availableDesk.isEmpty()) {
-            throw new NoAvailableHotDeskException("No available hot desk for date " + command.date());
-        }
-
-        HotDeskReservation newReservation = new HotDeskReservation(availableDesk.get().getId(), userId, command.date());
-        reservationRepository.save(newReservation);
-
-        RequestGetInformationFromMembershipDTO request = new RequestGetInformationFromMembershipDTO(userId, date);
-        membershipRepository.getInformation(request);
     }
 }

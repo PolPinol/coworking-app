@@ -1,11 +1,12 @@
 package com.ppinol.coworkingapp.core.domain.reservation.meetingRoom;
 
+import com.ppinol.coworkingapp.core.domain.AggregateRoot;
 import com.ppinol.coworkingapp.core.domain.UserId;
 import com.ppinol.coworkingapp.core.domain.meetingRoom.MeetingRoomId;
 
 import java.util.Date;
 
-public class MeetingRoomReservation {
+public class MeetingRoomReservation extends AggregateRoot {
 
     private final MeetingRoomReservationId meetingRoomReservationId;
     private final MeetingRoomId meetingRoomId;
@@ -35,6 +36,8 @@ public class MeetingRoomReservation {
         if (this.date.isToday() && this.hour.isBeforeOrNow()) {
             throw new InvalidMeetingRoomReservationDateException("Reservation date must be at least for the next hour");
         }
+
+        this.recordEvent(MeetingRoomWasReservedEvent.from(this));
     }
 
     public MeetingRoomId getMeetingRoomId() {
@@ -43,6 +46,10 @@ public class MeetingRoomReservation {
 
     public MeetingRoomReservationId getMeetingRoomReservationId() {
         return meetingRoomReservationId;
+    }
+
+    public UserId getUserId() {
+        return userId;
     }
 
     public MeetingRoomReservationDuration getDuration() {
@@ -67,20 +74,17 @@ public class MeetingRoomReservation {
 
     public boolean overlapsWith(String date, int hour, int duration) {
         MeetingRoomReservationDate otherDate = new MeetingRoomReservationDate(date);
-        MeetingRoomReservationHour otherHour = new MeetingRoomReservationHour(hour);
-        MeetingRoomReservationDuration otherDuration = new MeetingRoomReservationDuration(duration);
 
         if (!this.date.isSameDay(otherDate)) {
             return false;
         }
 
-        int thisStart = this.hour.hour();
-        int thisEnd = thisStart + this.duration.duration();
+        int thisStart = this.hour.value();
+        int thisEnd = thisStart + this.duration.value();
 
-        int otherStart = otherHour.hour();
-        int otherEnd = otherStart + otherDuration.duration();
+        int otherEnd = hour + duration;
 
-        return thisStart < otherEnd && thisEnd > otherStart;
+        return thisStart < otherEnd && thisEnd > hour;
     }
 
     @Override

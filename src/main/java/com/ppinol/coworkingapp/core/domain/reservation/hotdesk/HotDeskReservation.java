@@ -1,11 +1,12 @@
 package com.ppinol.coworkingapp.core.domain.reservation.hotdesk;
 
+import com.ppinol.coworkingapp.core.domain.AggregateRoot;
 import com.ppinol.coworkingapp.core.domain.UserId;
 import com.ppinol.coworkingapp.core.domain.hotdesk.HotDeskId;
 
 import java.util.Date;
 
-public class HotDeskReservation {
+public class HotDeskReservation extends AggregateRoot {
 
     private final HotDeskReservationId hotDeskReservationId;
     private final HotDeskId hotDeskId;
@@ -23,6 +24,8 @@ public class HotDeskReservation {
         this.status = HotDeskReservationStatus.create();
         this.createdAt = new Date();
         this.updatedAt = new Date();
+
+        this.recordEvent(HotDeskWasReservedEvent.from(this));
     }
 
     public HotDeskReservationId getReservationId() {

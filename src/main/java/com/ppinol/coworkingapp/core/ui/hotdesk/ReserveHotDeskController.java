@@ -21,7 +21,7 @@ public class ReserveHotDeskController {
     @PostMapping
     public ResponseEntity<Void> handle(@RequestBody ReserveHotDeskDTO dto) {
         commandHandler.handle(
-                new ReserveHotDeskCommand(dto.userId(), dto.date())
+                new ReserveHotDeskCommand(dto.userId(), dto.date(), false /* courtesy */)
         );
         return ResponseEntity.ok().build();
     }

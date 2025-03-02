@@ -1,5 +1,7 @@
 package com.ppinol.coworkingapp.core.ui;
 
+import com.ppinol.coworkingapp.core.domain.hotdesk.HotDesk;
+import com.ppinol.coworkingapp.core.domain.hotdesk.HotDeskNumber;
 import com.ppinol.coworkingapp.core.domain.meetingRoom.MeetingRoom;
 import com.ppinol.coworkingapp.core.domain.meetingRoom.MeetingRoomName;
 import com.ppinol.coworkingapp.core.infrastructure.InMemoryMeetingRoomRepository;
@@ -13,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -52,16 +56,27 @@ class ReserveMeetingRoomControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
+        List<HotDesk> availableHotDesks = hotDeskRepository.findAll();
+        assertThat(availableHotDesks).isNotEmpty();
+
+        String userId = "123e4567-e89b-12d3-a456-426614174000";
         String reserveJson = String.format(
-                "{\"meetingRoomId\":\"%s\",\"date\":\"2025-02-24\",\"hour\":10,\"duration\":2,\"userId\":\"123e4567-e89b-12d3-a456-426614174000\"}",
-                room.getId().value()
+                "{\"meetingRoomId\":\"%s\",\"date\":\"2025-02-24\",\"hour\":10,\"duration\":2,\"userId\":\"%s\"}",
+                room.getId().value(), userId
         );
         mockMvc.perform(post("/reserveMeetingRoom")
                         .content(reserveJson)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        // TODO: Se podría agregar validación adicional sobre la asignación del HotDesk de cortesía.
+        assertThat(meetingRoomRepository.findById(room.getId())).isNotNull();
+
+        HotDesk assignedHotDesk = hotDeskRepository.findAll().stream()
+                .findFirst()
+                .orElse(null);
+
+        assertThat(assignedHotDesk).isNotNull();
+        assertThat(assignedHotDesk.getNumber()).isEqualTo(new HotDeskNumber(1));
     }
 
     @Test
@@ -75,16 +90,16 @@ class ReserveMeetingRoomControllerTest {
 
     @Test
     void testReserveMeetingRoomOverlapping() throws Exception {
-        String meetingRoomJson = "{\"name\":\"Room A\",\"capacity\":10}";
+        String meetingRoomJson = "{\"name\":\"Room B\",\"capacity\":10}";
         mockMvc.perform(post("/registerMeetingRoom")
                         .content(meetingRoomJson)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        MeetingRoom room = meetingRoomRepository.findByName(new MeetingRoomName("Room A"));
+        MeetingRoom room = meetingRoomRepository.findByName(new MeetingRoomName("Room B"));
         assertThat(room).isNotNull();
 
         String reserveJson1 = String.format(
-                "{\"meetingRoomId\":\"%s\",\"date\":\"2025-02-24\",\"hour\":10,\"duration\":2,\"userId\":\"user-1\"}",
+                "{\"meetingRoomId\":\"%s\",\"date\":\"2025-02-24\",\"hour\":10,\"duration\":2,\"userId\":\"user-2\"}",
                 room.getId().value()
         );
         mockMvc.perform(post("/reserveMeetingRoom")
@@ -93,7 +108,7 @@ class ReserveMeetingRoomControllerTest {
                 .andExpect(status().isOk());
 
         String reserveJson2 = String.format(
-                "{\"meetingRoomId\":\"%s\",\"date\":\"2025-02-24\",\"hour\":11,\"duration\":2,\"userId\":\"user-2\"}",
+                "{\"meetingRoomId\":\"%s\",\"date\":\"2025-02-24\",\"hour\":11,\"duration\":2,\"userId\":\"user-3\"}",
                 room.getId().value()
         );
         mockMvc.perform(post("/reserveMeetingRoom")

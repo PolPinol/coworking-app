@@ -1,8 +1,10 @@
 package com.ppinol.coworkingapp.core.domain.meetingRoom;
 
+import com.ppinol.coworkingapp.core.domain.AggregateRoot;
+
 import java.util.Date;
 
-public class MeetingRoom {
+public class MeetingRoom extends AggregateRoot {
     private final MeetingRoomId id;
     private final MeetingRoomName name;
     private final MeetingRoomCapacity capacity;
@@ -17,6 +19,8 @@ public class MeetingRoom {
         this.status = MeetingRoomStatus.create();
         this.createdAt = new Date();
         this.updatedAt = new Date();
+
+        this.recordEvent(MeetingRoomWasRegisteredEvent.from(this));
     }
 
     public MeetingRoomId getId() {
