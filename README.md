@@ -22,6 +22,9 @@ The Coworking App provides REST endpoints to manage coworking spaces and reserva
 - **Reserve MeetingRoom**  
   Reserve a meeting room for a specific date, hour, and duration. When a reservation is made, the system attempts to assign a complimentary hot desk for that day (if available). **Endpoint:** `/reserveMeetingRoom`
 
+- **Reserve HotDesk**  
+  Reserve a hot desk for a specific user and date. **Endpoint:** `/reserveHotDesk`
+
 ---
 
 ## Architecture
@@ -94,7 +97,19 @@ The application is built using a **hexagonal (ports and adapters) architecture**
     "userId": "User-Id"
   }
   ```
-  
+
+### 5. Reserve HotDesk
+
+- **URL:** `/reserveHotDesk`
+- **Method:** `POST`
+- **Payload Example:**
+  ```json
+  {
+    "userId": "User-Id",
+    "date": "2022-12-01"
+  }
+  ```
+
 ---
 
 ## Running the Application
