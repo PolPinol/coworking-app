@@ -23,7 +23,7 @@ public abstract class Event<EventPayload> {
         this.version = version;
     }
 
-    public Id getId() {
+    public EventId getId() {
         return id;
     }
 
