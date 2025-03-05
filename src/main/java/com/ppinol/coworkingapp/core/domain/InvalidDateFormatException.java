@@ -1,6 +1,6 @@
 package com.ppinol.coworkingapp.core.domain;
 
-import com.ppinol.coworkingapp.core.BadRequestException;
+import com.ppinol.coworkingapp.core.exceptions.BadRequestException;
 
 import java.time.format.DateTimeParseException;
 

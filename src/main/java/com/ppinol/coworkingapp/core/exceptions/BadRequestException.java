@@ -1,4 +1,4 @@
-package com.ppinol.coworkingapp.core;
+package com.ppinol.coworkingapp.core.exceptions;
 
 public class BadRequestException extends RuntimeException {
     public BadRequestException(String message) {

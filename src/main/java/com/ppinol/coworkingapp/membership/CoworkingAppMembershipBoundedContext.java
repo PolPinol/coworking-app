@@ -1,11 +1,11 @@
-package com.ppinol.coworkingapp;
+package com.ppinol.coworkingapp.membership;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CoworkingApp {
+public class CoworkingAppMembershipBoundedContext {
     public static void main(String[] args) {
-        SpringApplication.run(CoworkingApp.class, args);
+        SpringApplication.run(CoworkingAppMembershipBoundedContext.class, args);
     }
 }
