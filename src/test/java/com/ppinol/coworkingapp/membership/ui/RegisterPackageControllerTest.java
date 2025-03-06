@@ -35,8 +35,8 @@ class RegisterPackageControllerTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        membershipRepository.clear();
-        readModelRepository.clear();
+        this.membershipRepository.clear();
+        this.readModelRepository.clear();
 
         String userId = "123e4567-e89b-12d3-a456-426614174010";
         String membershipJson = String.format("{\"userId\":\"%s\"}", userId);
