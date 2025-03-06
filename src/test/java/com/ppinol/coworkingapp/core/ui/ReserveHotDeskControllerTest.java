@@ -3,6 +3,7 @@ package com.ppinol.coworkingapp.core.ui;
 import com.ppinol.coworkingapp.core.domain.UserId;
 import com.ppinol.coworkingapp.core.domain.reservation.hotdesk.HotDeskReservation;
 import com.ppinol.coworkingapp.core.domain.reservation.hotdesk.HotDeskReservationDate;
+import com.ppinol.coworkingapp.core.infrastructure.InMemoryHotDeskRepository;
 import com.ppinol.coworkingapp.core.infrastructure.InMemoryHotDeskReservationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,8 +30,12 @@ class ReserveHotDeskControllerTest {
     @Autowired
     private InMemoryHotDeskReservationRepository repository;
 
+    @Autowired
+    private InMemoryHotDeskRepository hotDeskRepository;
+
     @BeforeEach
     void setUp() {
+        hotDeskRepository.clear();
         repository.clear();
     }
 

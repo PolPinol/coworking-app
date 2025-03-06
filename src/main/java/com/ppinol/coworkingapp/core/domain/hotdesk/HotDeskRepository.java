@@ -6,5 +6,4 @@ public interface HotDeskRepository {
     void save(HotDesk hotDesk);
     List<HotDesk> findAll();
     HotDesk findByNumber(HotDeskNumber number);
-    void clear();
 }

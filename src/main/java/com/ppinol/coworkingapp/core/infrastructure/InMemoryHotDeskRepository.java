@@ -30,7 +30,6 @@ public class InMemoryHotDeskRepository implements HotDeskRepository {
                 .orElse(null);
     }
 
-    @Override
     public void clear() {
         hotDesks.clear();
     }
