@@ -8,7 +8,7 @@ public abstract class EventSourcedEntity {
     private int version;
 
     protected EventSourcedEntity(List<Event<?>> stream) {
-        if (stream != null) {
+        if (!stream.isEmpty()) {
             for (Event<?> e : stream) {
                 when(e);
             }

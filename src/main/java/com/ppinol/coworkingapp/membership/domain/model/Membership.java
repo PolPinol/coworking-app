@@ -3,6 +3,7 @@ package com.ppinol.coworkingapp.membership.domain.model;
 import com.ppinol.coworkingapp.membership.domain.events.Event;
 import com.ppinol.coworkingapp.membership.domain.events.EventSourcedEntity;
 import com.ppinol.coworkingapp.membership.domain.events.MembershipCreatedEvent;
+import com.ppinol.coworkingapp.membership.domain.events.PackageSubscribedEvent;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,12 +31,23 @@ public class Membership extends EventSourcedEntity {
     public static Membership create(UserId userId) {
         MembershipId membershipId = MembershipId.generate();
         Membership membership = Membership.empty();
-        membership.applyCreatedEvent(membershipId, userId, new Date());
+        membership.registerMembershipWithUserId(membershipId, userId, new Date());
         return membership;
     }
 
-    private void applyCreatedEvent(MembershipId id, UserId userId, Date createdAt) {
+    private void registerMembershipWithUserId(MembershipId id, UserId userId, Date createdAt) {
         this.apply(MembershipCreatedEvent.with(id, userId, createdAt));
+    }
+
+    public void registerPackage(int credits, int year, int month) {
+        Package membershipPackage = Package.create(credits, year, month);
+        this.apply(PackageSubscribedEvent.with(
+                this.state.getMembershipId(),
+                membershipPackage.getPackageId(),
+                membershipPackage.getCredits(),
+                membershipPackage.getStartDate(),
+                membershipPackage.getEndDate())
+        );
     }
 
     @Override
@@ -44,13 +56,24 @@ public class Membership extends EventSourcedEntity {
             case MembershipCreatedEvent.TYPE:
                 whenMembershipCreated((MembershipCreatedEvent) e);
                 break;
+            case PackageSubscribedEvent.TYPE:
+                withPackageSubscribed((PackageSubscribedEvent) e);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown event type");
         }
     }
 
     private void whenMembershipCreated(MembershipCreatedEvent event) {
+        if (this.state != null && !this.state.isEmpty()) {
+            throw new IllegalArgumentException("Unknown event type");
+        }
+        this.state = MembershipState.empty();
         this.state = this.state.withMembershipCreated(event);
+    }
+
+    private void withPackageSubscribed(PackageSubscribedEvent event) {
+        this.state = this.state.withPackageSubscribed(event);
     }
 
     public MembershipState getState() {

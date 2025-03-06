@@ -3,9 +3,12 @@ package com.ppinol.coworkingapp.core.ui;
 import com.ppinol.coworkingapp.core.domain.UserId;
 import com.ppinol.coworkingapp.core.domain.reservation.hotdesk.HotDeskReservation;
 import com.ppinol.coworkingapp.core.domain.reservation.hotdesk.HotDeskReservationDate;
+import com.ppinol.coworkingapp.core.infrastructure.InMemoryHotDeskRepository;
 import com.ppinol.coworkingapp.core.infrastructure.InMemoryHotDeskReservationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,8 +29,12 @@ class ReserveHotDeskControllerTest {
     @Autowired
     private InMemoryHotDeskReservationRepository repository;
 
+    @Autowired
+    private InMemoryHotDeskRepository hotDeskRepository;
+
     @BeforeEach
     void setUp() {
+        hotDeskRepository.clear();
         repository.clear();
     }
 

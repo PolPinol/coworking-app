@@ -14,6 +14,10 @@ public abstract class Id {
         return id;
     }
 
+    public boolean isEmpty() {
+        return id.isEmpty();
+    }
+
     protected static String generateId() {
         return UUID.randomUUID().toString();
     }
