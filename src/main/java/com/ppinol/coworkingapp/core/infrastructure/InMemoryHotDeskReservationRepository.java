@@ -33,7 +33,6 @@ public class InMemoryHotDeskReservationRepository implements HotDeskReservationR
                 .noneMatch(res -> res.getHotDeskId().equals(id) && res.getDate().isSameDay(date));
     }
 
-    @Override
     public void clear() {
         this.reservations.clear();
     }

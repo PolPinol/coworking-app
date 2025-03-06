@@ -7,5 +7,4 @@ public interface HotDeskReservationRepository {
     void save(HotDeskReservation reservation);
     HotDeskReservation find(UserId id, HotDeskReservationDate date);
     boolean isHotDeskAvailable(HotDeskId id, HotDeskReservationDate date);
-    void clear();
 }
