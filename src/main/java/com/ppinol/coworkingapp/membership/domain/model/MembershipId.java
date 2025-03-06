@@ -15,4 +15,8 @@ public class MembershipId extends Id {
     public static MembershipId empty() {
         return new MembershipId("");
     }
+
+    public static MembershipId from(String id) {
+        return new MembershipId(id);
+    }
 }
