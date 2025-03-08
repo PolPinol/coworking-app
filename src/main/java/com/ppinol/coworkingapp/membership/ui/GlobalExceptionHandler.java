@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(assignableTypes = {
         CreateMembershipController.class,
-        RegisterPackageController.class
+        RegisterPackageController.class,
+        GetFullMembershipSummaryController.class
 })
 public class GlobalExceptionHandler {
 

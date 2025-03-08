@@ -3,7 +3,7 @@ package com.ppinol.coworkingapp.membership.ui;
 import com.ppinol.coworkingapp.membership.domain.model.Membership;
 import com.ppinol.coworkingapp.membership.domain.model.MembershipId;
 import com.ppinol.coworkingapp.membership.infrastructure.InMemoryMembershipRepository;
-import com.ppinol.coworkingapp.membership.infrastructure.InMemoryMembershipReadModel;
+import com.ppinol.coworkingapp.membership.infrastructure.InMemoryUserMembershipReadModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ class RegisterPackageControllerTest {
     private InMemoryMembershipRepository membershipRepository;
 
     @Autowired
-    private InMemoryMembershipReadModel readModelRepository;
+    private InMemoryUserMembershipReadModel readModelRepository;
 
     private String membershipId;
 
@@ -46,7 +46,7 @@ class RegisterPackageControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        Map<String, String> store = readModelRepository.getStore();
+        Map<String, String> store = readModelRepository.getProjection();
         membershipId = store.get(userId);
     }
 

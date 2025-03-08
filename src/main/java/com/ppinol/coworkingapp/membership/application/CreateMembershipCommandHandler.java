@@ -14,21 +14,21 @@ import java.util.List;
 public class CreateMembershipCommandHandler {
 
     private final MembershipRepository membershipRepository;
-    private final MembershipReadModel readModelRepository;
+    private final UserMembershipReadModel readModel;
     private final EventPublisher eventPublisher;
 
     public CreateMembershipCommandHandler(MembershipRepository membershipRepository,
-                                          MembershipReadModel readModelRepository,
+                                          UserMembershipReadModel readModel,
                                           EventPublisher eventPublisher) {
         this.membershipRepository = membershipRepository;
-        this.readModelRepository = readModelRepository;
+        this.readModel = readModel;
         this.eventPublisher = eventPublisher;
     }
 
     public void handle(CreateMembershipCommand command) {
         UserId userId = UserId.create(command.userId());
 
-        if (this.readModelRepository.existsByUserId(command.userId())) {
+        if (this.readModel.exists(command.userId())) {
             throw new DuplicateMembershipException("Duplicated membership for this userId: " + command.userId());
         }
 
