@@ -1,6 +1,6 @@
 package com.ppinol.coworkingapp.membership.ui;
 
-import com.ppinol.coworkingapp.membership.infrastructure.InMemoryMembershipReadModel;
+import com.ppinol.coworkingapp.membership.infrastructure.InMemoryUserMembershipReadModel;
 import com.ppinol.coworkingapp.membership.infrastructure.InMemoryMembershipRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class CreateMembershipControllerTest {
     private InMemoryMembershipRepository membershipRepository;
 
     @Autowired
-    private InMemoryMembershipReadModel readModelRepository;
+    private InMemoryUserMembershipReadModel readModelRepository;
 
     @BeforeEach
     void setUp() {
@@ -44,7 +44,7 @@ class CreateMembershipControllerTest {
                 .andExpect(status().isOk());
 
         // Verify the read model now contains a membership for the user
-        assertThat(readModelRepository.existsByUserId(userId)).isTrue();
+        assertThat(readModelRepository.exists(userId)).isTrue();
     }
 
     @Test
